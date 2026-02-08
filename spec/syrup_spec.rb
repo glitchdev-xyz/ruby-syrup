@@ -16,4 +16,8 @@ RSpec.describe Syrup do
     file = File.open(Dir.pwd + '/spec/fixtures/empty.txt')
     expect { Syrup.parse(file)  }.to raise_error
   end
+  it 'can parse a number' do
+    file = File.open(Dir.pwd + '/spec/fixtures/number.txt')
+    expect(Syrup.parse(file)).to be 12
+  end
 end
