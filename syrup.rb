@@ -15,8 +15,7 @@ class Syrup
   end
 
   def self.parse_int(io, acc)
-    # look at the next char in the io
-    # if it's another digit, glom it on to the previous digit(s)
+    # TODO - loop instead of recursion
     next_char = io.getc
     case next_char
     when '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
@@ -26,6 +25,5 @@ class Syrup
     when '-'
       -acc
     end
-
   end
 end

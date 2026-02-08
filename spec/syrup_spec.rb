@@ -16,8 +16,12 @@ RSpec.describe Syrup do
     file = File.open(Dir.pwd + '/spec/fixtures/empty.txt')
     expect { Syrup.parse(file)  }.to raise_error
   end
-  it 'can parse a number' do
+  it 'can parse a positive number' do
     file = File.open(Dir.pwd + '/spec/fixtures/number.txt')
     expect(Syrup.parse(file)).to be 123
+  end
+  it 'can parse a negative number' do
+    file = File.open(Dir.pwd + '/spec/fixtures/negnumber.txt')
+    expect(Syrup.parse(file)).to be -123
   end
 end
