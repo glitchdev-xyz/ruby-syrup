@@ -10,6 +10,9 @@ class Syrup
       false
     when '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
       self.parse_int(io, char.to_i)
+    when '['
+    when '{'
+    when '<'
     else
       raise StandardError
     end
@@ -27,6 +30,10 @@ class Syrup
       acc
     when '-'
       -acc
+    when ':' # bytestring
+    when "'" # symbol
+    when '"' # string
+      # read me acc number of bytes.
     end
   end
 end
