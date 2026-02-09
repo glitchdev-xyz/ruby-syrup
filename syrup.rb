@@ -1,4 +1,5 @@
 class Syrup
+  DIGITS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
   def self.parse(io)
     raise StandardError unless io.is_a?(File)
     char = io.getc
@@ -15,11 +16,13 @@ class Syrup
   end
 
   def self.parse_int(io, acc)
-    # TODO - loop instead of recursion
     next_char = io.getc
+    while DIGITS.include?(next_char)
+      acc =  acc * 10 + next_char.to_i
+      next_char = io.getc
+    end
+
     case next_char
-    when '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
-      self.parse_int(io, acc * 10 + next_char.to_i)
     when '+'
       acc
     when '-'
