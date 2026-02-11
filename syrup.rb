@@ -33,9 +33,9 @@ class Syrup
     when ':' # bytestring
       io.read(acc)
     when "'" # symbol
-      io.read(acc)
+      io.read(acc).to_sym
     when '"' # string
-      io.read(acc)
+      io.read(acc).encode!('UTF-8')
     end
   end
 end

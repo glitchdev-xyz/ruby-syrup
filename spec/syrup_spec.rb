@@ -21,14 +21,24 @@ RSpec.describe Syrup do
     strio = StringIO.new('5"tarot', 'r')
     expect(Syrup.parse(strio)).to eq 'tarot'
   end
+  it 'parses strings as UTF-8' do
+    strio = StringIO.new('5"tarot', 'r')
+    expect(Syrup.parse(strio).encoding.name).to eq 'UTF-8'
+  end
   it 'can parse a symbol' do
     strio = StringIO.new("5'tarot", 'r')
-    expect(Syrup.parse(strio)).to eq 'tarot'
+    expect(Syrup.parse(strio)).to eq :tarot
   end
   it 'can parse a bytestring' do
     data = "æ".b
     bytesize = data.bytesize # 2
     strio = StringIO.new("#{bytesize}:#{data}", 'r')
     expect(Syrup.parse(strio)).to eq 'æ'.b
+  end
+  it 'parses bytestrings as ASCII-8BIT encoded' do
+    data = "æ"
+    bytesize = data.bytesize # 2
+    strio = StringIO.new("#{bytesize}:#{data}", 'r')
+    expect(Syrup.parse(strio).encoding.name).to eq 'ASCII-8BIT'
   end
 end
