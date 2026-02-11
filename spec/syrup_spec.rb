@@ -2,26 +2,19 @@ require_relative '../syrup.rb'
 
 RSpec.describe Syrup do
   it 'parses a t boolean' do
-    file = File.open(Dir.pwd + '/spec/fixtures/true.txt')
-    expect(Syrup.parse(file)).to be true
+    strio = StringIO.new('t', 'r')
+    expect(Syrup.parse(strio)).to be true
   end
   it 'parses an f boolean' do
-    file = File.open(Dir.pwd + '/spec/fixtures/false.txt')
-    expect(Syrup.parse(file)).to be false
+    strio = StringIO.new('f', 'r')
+    expect(Syrup.parse(strio)).to be false
   end
   it 'can parse a positive number' do
-    file = File.open(Dir.pwd + '/spec/fixtures/number.txt')
-    expect(Syrup.parse(file)).to be 123
+    strio = StringIO.new('123+', 'r')
+    expect(Syrup.parse(strio)).to be 123
   end
   it 'can parse a negative number' do
-    file = File.open(Dir.pwd + '/spec/fixtures/negnumber.txt')
-    expect(Syrup.parse(file)).to be -123
+    strio = StringIO.new('123-', 'r')
+    expect(Syrup.parse(strio)).to be -123
   end
 end
-  # it 'raises an error otherwise' do
-  #   file = File.open(Dir.pwd + '/spec/fixtures/empty.txt')
-  #   expect { Syrup.parse(file)  }.to raise_error
-  # end
-  # it 'raises an error if it is not passed a file' do
-  #   expect { Syrup.parse('not a file')  }.to raise_error
-  # end
