@@ -1,5 +1,6 @@
 class Syrup
-  DIGITS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+  DIGITS = %w[0 1 2 3 4 5 6 7 8 9]
+
   def self.parse(io)
     char = io.getc
     case char
@@ -7,7 +8,7 @@ class Syrup
       true
     when 'f'
       false
-    when '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
+    when *DIGITS
       self.parse_int(io, char.to_i)
     when '['
     when '{'
