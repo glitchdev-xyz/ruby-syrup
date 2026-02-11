@@ -17,4 +17,13 @@ RSpec.describe Syrup do
     strio = StringIO.new('123-', 'r')
     expect(Syrup.parse(strio)).to be -123
   end
+  it 'can parse string' do
+    strio = StringIO.new('5"tarot', 'r')
+    expect(Syrup.parse(strio)).to eq 'tarot'
+  end
+  it 'can parse a symbol' do
+    strio = StringIO.new("5'tarot", 'r')
+    expect(Syrup.parse(strio)).to eq 'tarot'
+  end
+
 end

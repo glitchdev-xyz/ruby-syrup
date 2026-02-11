@@ -32,8 +32,9 @@ class Syrup
       -acc
     when ':' # bytestring
     when "'" # symbol
+      io.read(acc)
     when '"' # string
-      # read me acc number of bytes.
+      io.read(acc)
     end
   end
 end
