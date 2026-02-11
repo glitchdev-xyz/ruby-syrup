@@ -31,6 +31,7 @@ class Syrup
     when '-'
       -acc
     when ':' # bytestring
+      io.read(acc)
     when "'" # symbol
       io.read(acc)
     when '"' # string

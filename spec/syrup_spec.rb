@@ -25,5 +25,10 @@ RSpec.describe Syrup do
     strio = StringIO.new("5'tarot", 'r')
     expect(Syrup.parse(strio)).to eq 'tarot'
   end
-
+  it 'can parse a bytestring' do
+    data = "æ".b
+    bytesize = data.bytesize # 2
+    strio = StringIO.new("#{bytesize}:#{data}", 'r')
+    expect(Syrup.parse(strio)).to eq 'æ'.b
+  end
 end
