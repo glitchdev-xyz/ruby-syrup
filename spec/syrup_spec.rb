@@ -81,9 +81,30 @@ RSpec.describe Syrup do
       expect(Syrup.parse(strio)).to match_array(expected)
 
     end
-    it 'can parse a list of bytestrings' do
+    describe 'parsing lists of bytestrings' do
+      it 'can parse a list of bytestrings' do
+        item_1 = "æ".b
+        item_2 = "foo".b
+        bytesize_1 = item_1.bytesize # 2
+        bytesize_2 = item_2.bytesize # 3
+        list = "[#{bytesize_1}:#{item_1}, #{bytesize_2}:#{item_2}]"
+        expected = ['æ'.b, 'foo'.b]
+        strio = StringIO.new(list, 'r')
+        expect(Syrup.parse(strio)).to match_array(expected)
+      end
+      it 'parses lists of bytestrings as ASCII-8BIT encoded' do
+        item_1 = "æ".b
+        item_2 = "foo".b
+        bytesize_1 = item_1.bytesize # 2
+        bytesize_2 = item_2.bytesize # 3
+        list = "[#{bytesize_1}:#{item_1}, #{bytesize_2}:#{item_2}]"
+        expected_list = ['æ'.b, 'foo'.b]
+        strio = StringIO.new(list, 'r')
+        parsed = Syrup.parse(strio)
+        expect(parsed[0].encoding.name).to eq 'ASCII-8BIT'
+        expect(parsed[1].encoding.name).to eq 'ASCII-8BIT'
+      end
     end
-
   end
   describe 'with flat lists with multiple item types' do
     it 'can parse a list of numbers and booleans' do
