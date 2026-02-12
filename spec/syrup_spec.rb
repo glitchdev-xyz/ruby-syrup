@@ -71,6 +71,15 @@ RSpec.describe Syrup do
       expect(Syrup.parse(strio)).to match_array(expected)
     end
     it 'can parse a list of symbols' do
+      cups = "4'cups"
+      wands = "5'wands"
+      swords = "6'swords"
+      globes = "6'globes"
+      list = "[#{cups}, #{wands}, #{swords}, #{globes}]"
+      expected = [:cups, :wands, :swords, :globes]
+      strio = StringIO.new(list, 'r')
+      expect(Syrup.parse(strio)).to match_array(expected)
+
     end
     it 'can parse a list of bytestrings' do
     end
