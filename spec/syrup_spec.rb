@@ -41,7 +41,7 @@ RSpec.describe Syrup do
     strio = StringIO.new("#{bytesize}:#{data}", 'r')
     expect(Syrup.parse(strio).encoding.name).to eq 'ASCII-8BIT'
   end
-  describe 'with simple lists' do
+  describe 'with flat lists of a single type' do
     it 'can parse a single type, single item list' do
       list = '[t]'
       expected = [true]
@@ -57,6 +57,29 @@ RSpec.describe Syrup do
     it 'can parse a list of positive and negative numbers' do
       list = '[1+, 0+, 2-, 123+, 124-]'
       expected = [1, 0, -2, 123, -124]
+      strio = StringIO.new(list, 'r')
+      expect(Syrup.parse(strio)).to match_array(expected)
+    end
+    it 'can parse a list of strings' do
+      cups = '4"cups'
+      wands = '5"wands'
+      swords = '6"swords'
+      globes = '6"globes'
+      list = "[#{cups}, #{wands}, #{swords}, #{globes}]"
+      expected = ['cups', 'wands', 'swords', 'globes']
+      strio = StringIO.new(list, 'r')
+      expect(Syrup.parse(strio)).to match_array(expected)
+    end
+    it 'can parse a list of symbols' do
+    end
+    it 'can parse a list of bytestrings' do
+    end
+
+  end
+  describe 'with flat lists with multiple item types' do
+    it 'can parse a list of numbers and booleans' do
+      list = '[1+, f, 2-, t, 124-]'
+      expected = [1, false, -2, true, -124]
       strio = StringIO.new(list, 'r')
       expect(Syrup.parse(strio)).to match_array(expected)
     end
