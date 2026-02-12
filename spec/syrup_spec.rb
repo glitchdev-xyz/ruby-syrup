@@ -49,13 +49,13 @@ RSpec.describe Syrup do
       expect(Syrup.parse(strio)).to match_array(expected)
     end
     it 'can parse a single type, multi item list' do
-      list = '[t, f, f, t]'
+      list = '[tfft]'
       expected = [true, false, false, true]
       strio = StringIO.new(list, 'r')
       expect(Syrup.parse(strio)).to match_array(expected)
     end
     it 'can parse a list of positive and negative numbers' do
-      list = '[1+, 0+, 2-, 123+, 124-]'
+      list = '[1+0+2-123+124-]'
       expected = [1, 0, -2, 123, -124]
       strio = StringIO.new(list, 'r')
       expect(Syrup.parse(strio)).to match_array(expected)
@@ -65,7 +65,7 @@ RSpec.describe Syrup do
       wands = '5"wands'
       swords = '6"swords'
       globes = '6"globes'
-      list = "[#{cups}, #{wands}, #{swords}, #{globes}]"
+      list = "[#{cups}#{wands}#{swords}#{globes}]"
       expected = ['cups', 'wands', 'swords', 'globes']
       strio = StringIO.new(list, 'r')
       expect(Syrup.parse(strio)).to match_array(expected)
@@ -75,7 +75,7 @@ RSpec.describe Syrup do
       wands = "5'wands"
       swords = "6'swords"
       globes = "6'globes"
-      list = "[#{cups}, #{wands}, #{swords}, #{globes}]"
+      list = "[#{cups}#{wands}#{swords}#{globes}]"
       expected = [:cups, :wands, :swords, :globes]
       strio = StringIO.new(list, 'r')
       expect(Syrup.parse(strio)).to match_array(expected)
@@ -87,7 +87,7 @@ RSpec.describe Syrup do
         item_2 = "foo".b
         bytesize_1 = item_1.bytesize # 2
         bytesize_2 = item_2.bytesize # 3
-        list = "[#{bytesize_1}:#{item_1}, #{bytesize_2}:#{item_2}]"
+        list = "[#{bytesize_1}:#{item_1}#{bytesize_2}:#{item_2}]"
         expected = ['æ'.b, 'foo'.b]
         strio = StringIO.new(list, 'r')
         expect(Syrup.parse(strio)).to match_array(expected)
@@ -97,7 +97,7 @@ RSpec.describe Syrup do
         item_2 = "foo".b
         bytesize_1 = item_1.bytesize # 2
         bytesize_2 = item_2.bytesize # 3
-        list = "[#{bytesize_1}:#{item_1}, #{bytesize_2}:#{item_2}]"
+        list = "[#{bytesize_1}:#{item_1}#{bytesize_2}:#{item_2}]"
         expected_list = ['æ'.b, 'foo'.b]
         strio = StringIO.new(list, 'r')
         parsed = Syrup.parse(strio)
@@ -108,7 +108,7 @@ RSpec.describe Syrup do
   end
   describe 'with flat lists with multiple item types' do
     it 'can parse a list of numbers and booleans' do
-      list = '[1+, f, 2-, t, 124-]'
+      list = '[1+f2-t124-]'
       expected = [1, false, -2, true, -124]
       strio = StringIO.new(list, 'r')
       expect(Syrup.parse(strio)).to match_array(expected)
