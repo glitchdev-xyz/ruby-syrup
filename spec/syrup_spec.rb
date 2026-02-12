@@ -54,5 +54,11 @@ RSpec.describe Syrup do
       strio = StringIO.new(list, 'r')
       expect(Syrup.parse(strio)).to match_array(expected)
     end
+    it 'can parse a list of positive and negative numbers' do
+      list = '[1+, 0+, 2-, 123+, 124-]'
+      expected = [1, 0, -2, 123, -124]
+      strio = StringIO.new(list, 'r')
+      expect(Syrup.parse(strio)).to match_array(expected)
+    end
   end
 end

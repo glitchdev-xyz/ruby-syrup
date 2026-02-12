@@ -29,8 +29,8 @@ class Syrup
         list << true
       when 'f'
         list  << false
-      # when *DIGITS
-#        list << self.parse_int(io, char.to_i)
+      when *DIGITS
+       list << self.parse_int(io, next_char.to_i)
         # when '['
         #   self.parse_list(io)
         # when '{'
