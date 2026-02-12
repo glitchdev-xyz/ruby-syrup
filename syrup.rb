@@ -1,3 +1,4 @@
+require 'byebug'
 class Syrup
   DIGITS = %w[0 1 2 3 4 5 6 7 8 9]
 
@@ -11,11 +12,37 @@ class Syrup
     when *DIGITS
       self.parse_int(io, char.to_i)
     when '['
+      self.parse_list(io)
     when '{'
     when '<'
     else
       raise StandardError
     end
+  end
+
+  def self.parse_list(io)
+    next_char = io.getc
+    list = []
+    while next_char != ']'
+      case next_char
+      when 't'
+        list << true
+      when 'f'
+        list  << false
+      # when *DIGITS
+#        list << self.parse_int(io, char.to_i)
+        # when '['
+        #   self.parse_list(io)
+        # when '{'
+        # when '<'
+        # else
+        #   raise StandardError
+      end
+
+      next_char = io.getc
+    end
+
+    list
   end
 
   def self.parse_int(io, acc)

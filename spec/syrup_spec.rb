@@ -41,4 +41,18 @@ RSpec.describe Syrup do
     strio = StringIO.new("#{bytesize}:#{data}", 'r')
     expect(Syrup.parse(strio).encoding.name).to eq 'ASCII-8BIT'
   end
+  describe 'with simple lists' do
+    it 'can parse a single type, single item list' do
+      list = '[t]'
+      expected = [true]
+      strio = StringIO.new(list, 'r')
+      expect(Syrup.parse(strio)).to match_array(expected)
+    end
+    it 'can parse a single type, multi item list' do
+      list = '[t, f, f, t]'
+      expected = [true, false, false, true]
+      strio = StringIO.new(list, 'r')
+      expect(Syrup.parse(strio)).to match_array(expected)
+    end
+  end
 end
