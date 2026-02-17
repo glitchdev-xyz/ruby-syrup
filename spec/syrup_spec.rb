@@ -116,14 +116,8 @@ RSpec.describe Syrup do
   end
   describe 'with lists of lists' do
     it 'can parse nested lists' do
-      list = '[t[f]]'
-      expected = [true, [false]]
-      strio = StringIO.new(list, 'r')
-      expect(Syrup.parse(strio)).to match_array(expected)
-    end
-    it 'can parse nested lists' do
-      list = '[t[f1+]]'
-      expected = [true, [false, 1]]
+      list = '[t[f1+[3"foo4\'bars]]2-]'
+      expected = [true, [false, 1, ['foo', :bars]], -2]
       strio = StringIO.new(list, 'r')
       expect(Syrup.parse(strio)).to match_array(expected)
     end
