@@ -123,6 +123,7 @@ RSpec.describe Syrup do
     end
   end
   describe 'dictionaries' do
+    # TODO implement sorting.
     it 'can parse a dictionary with a string as the key' do
       dict = '{3"age30+}'
       strio = StringIO.new(dict, 'r')
