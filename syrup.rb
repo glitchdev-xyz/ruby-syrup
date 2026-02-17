@@ -33,12 +33,6 @@ class Syrup
         arr  << false
       when *DIGITS
        arr << self.parse_int(io, next_char.to_i)
-        # when '['
-        #   self.parse_list(io)
-        # when '{'
-        # when '<'
-        # else
-        #   raise StandardError
       when '['
         arr << self.parse_list(io)
       end
