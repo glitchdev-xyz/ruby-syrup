@@ -145,7 +145,14 @@ RSpec.describe Syrup do
       expect(Syrup.parse(strio)).to include(numbers: [1, -3])
     end
     it 'can parse a dictionary with a list as the key' do
-      # TODO - what should the result look like in Ruby?
+      dict = '{[t]3"foo}'
+      strio = StringIO.new(dict, 'r')
+      expect(Syrup.parse(strio)).to include([true] => 'foo')
+    end
+    it 'can parse nested dictionaries' do
+      dict = '{3"foo{[t]3"bar}}'
+      strio = StringIO.new(dict, 'r')
+      expect(Syrup.parse(strio)).to include('foo' => { [true] => 'bar' })
     end
   end
 end

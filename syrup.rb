@@ -42,7 +42,9 @@ class Syrup
         value = self.parse(io)
         hash[key] = value
       when '['
-        arr << self.parse(io)
+        key = self.parse_list(io)
+        value = self.parse(io)
+        hash[key] = value
       end
 
       unless io.eof?
