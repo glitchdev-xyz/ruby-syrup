@@ -13,13 +13,44 @@ class Syrup
     when *DIGITS
       self.parse_int(io, char.to_i)
     when '['
-      arr = self.parse_list(io)
+      self.parse_list(io)
     when '{'
+      self.parse_dictionary(io)
     when '<'
     else
       raise StandardError
     end
 
+  end
+
+  def self.parse_dictionary(io)
+    next_char = io.getc
+    hash = {}
+
+    while next_char != '}'
+      case next_char
+      when 't'
+        key = true
+        value = self.parse(io)
+        hash[key] = value
+      when 'f'
+        key = false
+        value = self.parse(io)
+        hash[key] = value
+      when *DIGITS
+        key = self.parse_int(io, next_char.to_i)
+        value = self.parse(io)
+        hash[key] = value
+      when '['
+        arr << self.parse_list(io)
+      end
+
+      unless io.eof?
+        next_char = io.getc
+      end
+    end
+
+    hash
   end
 
   def self.parse_list(io)

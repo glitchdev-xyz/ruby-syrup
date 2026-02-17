@@ -122,4 +122,30 @@ RSpec.describe Syrup do
       expect(Syrup.parse(strio)).to match_array(expected)
     end
   end
+  describe 'dictionaries' do
+    it 'can parse a dictionary with a string as the key' do
+      dict = '{3"age30+}'
+      expected = {
+        'age': 30
+      }
+      strio = StringIO.new(dict, 'r')
+      expect(Syrup.parse(strio)).to include('age' => 30)
+    end
+    it 'can parse a dictionary with a symbol as the key' do
+      dict = '{3\'age30+}'
+      expected = {
+        age: 30
+      }
+      strio = StringIO.new(dict, 'r')
+      expect(Syrup.parse(strio)).to include(:age => 30)
+    end
+    it 'can parse a dictionary with a boolean as the key' do
+      dict = '{t3"foo}'
+      expected = {
+        true: 'foo'
+      }
+      strio = StringIO.new(dict, 'r')
+      expect(Syrup.parse(strio)).to include(true => 'foo')
+    end
+  end
 end
