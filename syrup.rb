@@ -4,6 +4,7 @@ class Syrup
 
   def self.parse(io)
     char = io.getc
+
     case char
     when 't'
       true
@@ -12,37 +13,41 @@ class Syrup
     when *DIGITS
       self.parse_int(io, char.to_i)
     when '['
-      self.parse_list(io)
+      arr = self.parse_list(io)
     when '{'
     when '<'
     else
       raise StandardError
     end
+
   end
 
   def self.parse_list(io)
     next_char = io.getc
-    list = []
+    arr = []
     while next_char != ']'
       case next_char
       when 't'
-        list << true
+        arr << true
       when 'f'
-        list  << false
+        arr  << false
       when *DIGITS
-       list << self.parse_int(io, next_char.to_i)
+       arr << self.parse_int(io, next_char.to_i)
         # when '['
         #   self.parse_list(io)
         # when '{'
         # when '<'
         # else
         #   raise StandardError
+      when '['
+        arr << self.parse_list(io)
       end
-
-      next_char = io.getc
+      unless io.eof?
+        next_char = io.getc
+      end
     end
 
-    list
+    arr
   end
 
   def self.parse_int(io, acc)
