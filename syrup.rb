@@ -5,21 +5,22 @@ class Syrup
   DIGITS = %w[0 1 2 3 4 5 6 7 8 9].freeze
 
   def self.parse(io)
-    char = io.getc
+    next_char = io.getc
 
-    case char
+    case next_char
     when 't'
       true
     when 'f'
       false
     when *DIGITS
-      parse_int(io, char.to_i)
+      parse_int(io, next_char.to_i)
     when '['
       parse_list(io)
     when '{'
       parse_dictionary(io)
     when '<'
     else
+      # TODO: Write custom errors.
       raise StandardError
     end
   end
@@ -31,21 +32,14 @@ class Syrup
     while next_char != '}'
       case next_char
       when 't'
-        key = true
-        value = parse(io)
-        hash[key] = value
+        hash[true] = parse(io)
       when 'f'
-        key = false
-        value = parse(io)
-        hash[key] = value
+        hash[false] = parse(io)
       when *DIGITS
         key = parse_int(io, next_char.to_i)
-        value = parse(io)
-        hash[key] = value
+        hash[key] = parse(io)
       when '['
-        key = parse_list(io)
-        value = parse(io)
-        hash[key] = value
+        hash[parse_list(io)] = parse(io)
       end
 
       next_char = io.getc unless io.eof?
@@ -57,6 +51,7 @@ class Syrup
   def self.parse_list(io)
     next_char = io.getc
     arr = []
+
     while next_char != ']'
       case next_char
       when 't'
@@ -68,6 +63,7 @@ class Syrup
       when '['
         arr << parse_list(io)
       end
+
       next_char = io.getc unless io.eof?
     end
 
@@ -76,15 +72,16 @@ class Syrup
 
   def self.parse_int(io, acc)
     next_char = io.getc
+
     while DIGITS.include?(next_char)
       acc = (acc * 10) + next_char.to_i
       next_char = io.getc
     end
 
     case next_char
-    when '+'
+    when '+' # positive integer
       acc
-    when '-'
+    when '-' # negative integer
       -acc
     when ':' # bytestring
       io.read(acc)
