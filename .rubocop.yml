@@ -1,2 +1,8 @@
+plugins:
+  - rubocop-rspec
+
 AllCops:
   NewCops: enable
+
+RSpec/ExampleLength:
+  Enabled: false
