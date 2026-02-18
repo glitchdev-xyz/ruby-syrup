@@ -1,4 +1,6 @@
-require_relative '../syrup.rb'
+# frozen_string_literal: true
+
+require_relative '../syrup'
 
 RSpec.describe Syrup do
   it 'parses a t boolean' do
@@ -15,7 +17,7 @@ RSpec.describe Syrup do
   end
   it 'can parse a negative number' do
     strio = StringIO.new('123-', 'r')
-    expect(Syrup.parse(strio)).to be -123
+    expect(Syrup.parse(strio)).to be(-123)
   end
   it 'can parse string' do
     strio = StringIO.new('5"tarot', 'r')
@@ -30,13 +32,13 @@ RSpec.describe Syrup do
     expect(Syrup.parse(strio)).to eq :tarot
   end
   it 'can parse a bytestring' do
-    data = "æ".b
+    data = 'æ'.b
     bytesize = data.bytesize # 2
     strio = StringIO.new("#{bytesize}:#{data}", 'r')
     expect(Syrup.parse(strio)).to eq 'æ'.b
   end
   it 'parses bytestrings as ASCII-8BIT encoded' do
-    data = "æ"
+    data = 'æ'
     bytesize = data.bytesize # 2
     strio = StringIO.new("#{bytesize}:#{data}", 'r')
     expect(Syrup.parse(strio).encoding.name).to eq 'ASCII-8BIT'
@@ -66,7 +68,7 @@ RSpec.describe Syrup do
       swords = '6"swords'
       globes = '6"globes'
       list = "[#{cups}#{wands}#{swords}#{globes}]"
-      expected = ['cups', 'wands', 'swords', 'globes']
+      expected = %w[cups wands swords globes]
       strio = StringIO.new(list, 'r')
       expect(Syrup.parse(strio)).to match_array(expected)
     end
@@ -76,15 +78,14 @@ RSpec.describe Syrup do
       swords = "6'swords"
       globes = "6'globes"
       list = "[#{cups}#{wands}#{swords}#{globes}]"
-      expected = [:cups, :wands, :swords, :globes]
+      expected = %i[cups wands swords globes]
       strio = StringIO.new(list, 'r')
       expect(Syrup.parse(strio)).to match_array(expected)
-
     end
     describe 'parsing lists of bytestrings' do
       it 'can parse a list of bytestrings' do
-        item_1 = "æ".b
-        item_2 = "foo".b
+        item_1 = 'æ'.b
+        item_2 = 'foo'.b
         bytesize_1 = item_1.bytesize # 2
         bytesize_2 = item_2.bytesize # 3
         list = "[#{bytesize_1}:#{item_1}#{bytesize_2}:#{item_2}]"
@@ -93,12 +94,12 @@ RSpec.describe Syrup do
         expect(Syrup.parse(strio)).to match_array(expected)
       end
       it 'parses lists of bytestrings as ASCII-8BIT encoded' do
-        item_1 = "æ".b
-        item_2 = "foo".b
+        item_1 = 'æ'.b
+        item_2 = 'foo'.b
         bytesize_1 = item_1.bytesize # 2
         bytesize_2 = item_2.bytesize # 3
         list = "[#{bytesize_1}:#{item_1}#{bytesize_2}:#{item_2}]"
-        expected_list = ['æ'.b, 'foo'.b]
+        ['æ'.b, 'foo'.b]
         strio = StringIO.new(list, 'r')
         parsed = Syrup.parse(strio)
         expect(parsed[0].encoding.name).to eq 'ASCII-8BIT'
@@ -123,7 +124,7 @@ RSpec.describe Syrup do
     end
   end
   describe 'dictionaries' do
-    # TODO implement sorting.
+    # TODO: implement sorting.
     it 'can parse a dictionary with a string as the key' do
       dict = '{3"age30+}'
       strio = StringIO.new(dict, 'r')
@@ -132,7 +133,7 @@ RSpec.describe Syrup do
     it 'can parse a dictionary with a symbol as the key' do
       dict = '{3\'age30+}'
       strio = StringIO.new(dict, 'r')
-      expect(Syrup.parse(strio)).to include(:age => 30)
+      expect(Syrup.parse(strio)).to include(age: 30)
     end
     it 'can parse a dictionary with a boolean as the key' do
       dict = '{t3"foo}'
