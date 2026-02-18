@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 require 'byebug'
 class Syrup
-  DIGITS = %w[0 1 2 3 4 5 6 7 8 9]
+  DIGITS = %w[0 1 2 3 4 5 6 7 8 9].freeze
 
   def self.parse(io)
     char = io.getc
@@ -11,16 +13,15 @@ class Syrup
     when 'f'
       false
     when *DIGITS
-      self.parse_int(io, char.to_i)
+      parse_int(io, char.to_i)
     when '['
-      self.parse_list(io)
+      parse_list(io)
     when '{'
-      self.parse_dictionary(io)
+      parse_dictionary(io)
     when '<'
     else
       raise StandardError
     end
-
   end
 
   def self.parse_dictionary(io)
@@ -31,25 +32,23 @@ class Syrup
       case next_char
       when 't'
         key = true
-        value = self.parse(io)
+        value = parse(io)
         hash[key] = value
       when 'f'
         key = false
-        value = self.parse(io)
+        value = parse(io)
         hash[key] = value
       when *DIGITS
-        key = self.parse_int(io, next_char.to_i)
-        value = self.parse(io)
+        key = parse_int(io, next_char.to_i)
+        value = parse(io)
         hash[key] = value
       when '['
-        key = self.parse_list(io)
-        value = self.parse(io)
+        key = parse_list(io)
+        value = parse(io)
         hash[key] = value
       end
 
-      unless io.eof?
-        next_char = io.getc
-      end
+      next_char = io.getc unless io.eof?
     end
 
     hash
@@ -63,15 +62,13 @@ class Syrup
       when 't'
         arr << true
       when 'f'
-        arr  << false
+        arr << false
       when *DIGITS
-       arr << self.parse_int(io, next_char.to_i)
+        arr << parse_int(io, next_char.to_i)
       when '['
-        arr << self.parse_list(io)
+        arr << parse_list(io)
       end
-      unless io.eof?
-        next_char = io.getc
-      end
+      next_char = io.getc unless io.eof?
     end
 
     arr
@@ -80,7 +77,7 @@ class Syrup
   def self.parse_int(io, acc)
     next_char = io.getc
     while DIGITS.include?(next_char)
-      acc =  acc * 10 + next_char.to_i
+      acc = (acc * 10) + next_char.to_i
       next_char = io.getc
     end
 
