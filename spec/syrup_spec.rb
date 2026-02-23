@@ -53,6 +53,8 @@ RSpec.describe Syrup do
   end
 
   describe 'with flat lists of a single type' do
+    # TODO: spec for parsing lists of symbols and strings together.
+    # Figure out how to prevent escaping when creating the StringIO
     it 'can parse a single type, single item list' do
       list = '[t]'
       expected = [true]
@@ -178,6 +180,46 @@ RSpec.describe Syrup do
       dict = '{3"foo{[t]3"bar}}'
       strio = StringIO.new(dict, 'r')
       expect(described_class.parse(strio)).to include('foo' => { [true] => 'bar' })
+    end
+    it 'can parse a dictionary with a record as a key' do
+      record = "<6'person30+t>"
+      dict = "{#{record}f}"
+      strio = StringIO.new(dict, 'r')
+      expect(described_class.parse(strio)).to(
+        include({ person: [30, true] } => false)
+      )
+    end
+  end
+
+  describe 'records' do
+    # TODO: Should this be valid or no?
+    it 'raises when a record is empty' do
+      record = "<>"
+      strio = StringIO.new(record, 'r')
+      expect { described_class.parse(strio) }.to raise_error(StandardError, 'invalid Syrup')
+    end
+    it 'it can parse a record' do
+      record = "<6'person30+t>"
+      # TODO: add a string to the record
+      strio = StringIO.new(record, 'r')
+      expected = { person: [30, true]}
+      expect(described_class.parse(strio)).to eq(expected)
+    end
+    it 'it can parse a record when the label is type dictionary' do
+      dictionary = "{3'age35+}"
+      record = "<#{dictionary}30+t>"
+      strio = StringIO.new(record, 'r')
+      expected = { { age: 35 } => [30, true]}
+      expect(described_class.parse(strio)).to eq(expected)
+    end
+
+    it 'it can parse a record with mixed type fields' do
+      dictionary1 = "{3'age35+}"
+      dictionary2 = "{3'age37+}"
+      record = "<#{dictionary1}#{dictionary2}30+t>"
+      strio = StringIO.new(record, 'r')
+      expected = { { age: 35 } => [{ age: 37 }, 30, true]}
+      expect(described_class.parse(strio)).to eq(expected)
     end
   end
 end

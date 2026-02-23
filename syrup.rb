@@ -4,8 +4,11 @@ require 'byebug'
 class Syrup
   DIGITS = %w[0 1 2 3 4 5 6 7 8 9].freeze
 
-  def self.parse(io)
-    next_char = io.getc
+  def self.parse(io, next_char = nil)
+
+    raise StandardError if io.eof?
+
+    next_char = io.getc unless next_char
 
     case next_char
     when 't'
@@ -19,17 +22,38 @@ class Syrup
     when '{'
       parse_dictionary(io)
     when '<'
+      parse_record(io)
     else
+      raise StandardError, 'invalid Syrup'
       # TODO: Write custom errors.
-      raise StandardError
     end
   end
 
+  def self.parse_record(io)
+    # The label for a record is in the first position,
+    # and can be any Syrup type.
+    label = parse(io)
+
+    # everything following the label are fields.
+    fields = []
+
+    next_char = io.getc
+    while next_char != '>'
+
+      fields << parse(io, next_char)
+      next_char = io.getc
+    end
+
+    { label => fields }
+  end
+
+
   def self.parse_dictionary(io)
     next_char = io.getc
-    hash = {}
 
+    hash = {}
     while next_char != '}'
+
       case next_char
       when 't'
         hash[true] = parse(io)
@@ -40,9 +64,10 @@ class Syrup
         hash[key] = parse(io)
       when '['
         hash[parse_list(io)] = parse(io)
+      when '<'
+        key = parse_record(io)
+        hash[key] = parse(io)
       end
-
-      raise StandardError if io.eof?
 
       next_char = io.getc
     end
@@ -65,8 +90,6 @@ class Syrup
       when '['
         arr << parse_list(io)
       end
-
-      raise StandardError if io.eof?
 
       next_char = io.getc
     end
