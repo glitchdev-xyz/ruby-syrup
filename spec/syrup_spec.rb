@@ -181,6 +181,7 @@ RSpec.describe Syrup do
       strio = StringIO.new(dict, 'r')
       expect(described_class.parse(strio)).to include('foo' => { [true] => 'bar' })
     end
+
     it 'can parse a dictionary with a record as a key' do
       record = "<6'person30+t>"
       dict = "{#{record}f}"
@@ -194,31 +195,33 @@ RSpec.describe Syrup do
   describe 'records' do
     # TODO: Should this be valid or no?
     it 'raises when a record is empty' do
-      record = "<>"
+      record = '<>'
       strio = StringIO.new(record, 'r')
       expect { described_class.parse(strio) }.to raise_error(StandardError, 'invalid Syrup')
     end
-    it 'it can parse a record' do
+
+    it 'can parse a record' do
       record = "<6'person30+t>"
       # TODO: add a string to the record
       strio = StringIO.new(record, 'r')
-      expected = { person: [30, true]}
-      expect(described_class.parse(strio)).to eq(expected)
-    end
-    it 'it can parse a record when the label is type dictionary' do
-      dictionary = "{3'age35+}"
-      record = "<#{dictionary}30+t>"
-      strio = StringIO.new(record, 'r')
-      expected = { { age: 35 } => [30, true]}
+      expected = { person: [30, true] }
       expect(described_class.parse(strio)).to eq(expected)
     end
 
-    it 'it can parse a record with mixed type fields' do
+    it 'can parse a record when the label is type dictionary' do
+      dictionary = "{3'age35+}"
+      record = "<#{dictionary}30+t>"
+      strio = StringIO.new(record, 'r')
+      expected = { { age: 35 } => [30, true] }
+      expect(described_class.parse(strio)).to eq(expected)
+    end
+
+    it 'can parse a record with mixed type fields' do
       dictionary1 = "{3'age35+}"
       dictionary2 = "{3'age37+}"
       record = "<#{dictionary1}#{dictionary2}30+t>"
       strio = StringIO.new(record, 'r')
-      expected = { { age: 35 } => [{ age: 37 }, 30, true]}
+      expected = { { age: 35 } => [{ age: 37 }, 30, true] }
       expect(described_class.parse(strio)).to eq(expected)
     end
   end

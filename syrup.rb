@@ -5,10 +5,9 @@ class Syrup
   DIGITS = %w[0 1 2 3 4 5 6 7 8 9].freeze
 
   def self.parse(io, next_char = nil)
-
     raise StandardError if io.eof?
 
-    next_char = io.getc unless next_char
+    next_char ||= io.getc
 
     case next_char
     when 't'
@@ -46,7 +45,6 @@ class Syrup
 
     { label => fields }
   end
-
 
   def self.parse_dictionary(io)
     next_char = io.getc
