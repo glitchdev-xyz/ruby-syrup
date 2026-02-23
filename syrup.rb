@@ -42,7 +42,7 @@ class Syrup
         hash[parse_list(io)] = parse(io)
       end
 
-      break if io.eof?
+      raise StandardError if io.eof?
 
       next_char = io.getc
     end
@@ -66,7 +66,7 @@ class Syrup
         arr << parse_list(io)
       end
 
-      break if io.eof?
+      raise StandardError if io.eof?
 
       next_char = io.getc
     end
