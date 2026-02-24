@@ -77,6 +77,7 @@ class Syrup
     next_char = io.getc
     arr = []
 
+    # TODO: Here and other private meths, just call .parse again.
     while next_char != ']'
       case next_char
       when 't'
